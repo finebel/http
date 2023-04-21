@@ -83,18 +83,13 @@ class Request extends BaseRequest {
   /// This is converted to and from [bodyBytes] using [encoding].
   ///
   /// When this is set, if the request does not yet have a `Content-Type`
-  /// header, one will be added with the type `text/plain`. Then the `charset`
-  /// parameter of the `Content-Type` header (whether new or pre-existing) will
-  /// be set to [encoding] if it wasn't already set.
+  /// header, one will be added with the type `text/plain` and a suitable charset.
   String get body => encoding.decode(bodyBytes);
 
   set body(String value) {
     bodyBytes = encoding.encode(value);
-    var contentType = _contentType;
-    if (contentType == null) {
+    if (_contentType == null) {
       _contentType = MediaType('text', 'plain', {'charset': encoding.name});
-    } else if (!contentType.parameters.containsKey('charset')) {
-      _contentType = contentType;
     }
   }
 
